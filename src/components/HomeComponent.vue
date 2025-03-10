@@ -2,33 +2,28 @@
   <div>
     <!-- Abas -->
     <div class="tabs">
-      <button @click="selectedTab = 'currency'">Search by currency</button>
-      <button @click="selectedTab = 'name'">Search by name</button>
-      <button @click="selectedTab = 'clear', getFlags()">Clear search filters</button>
+      <span @click="selectedTab = 'currency'" :class="{'active': selectedTab === 'currency'}">Search by currency</span>
+      <span @click="selectedTab = 'name'" :class="{'active': selectedTab === 'name'}">Search by name</span>
     </div>
-    <div v-if="selectedTab === 'currency'">
-        <label>Write the currency abbreviation</label>
-        <br>
-        <input v-model="currency" placeholder="Dollar ex: USD">
-        <button @click="getCurrency">search</button>
-      </div>
-      <div v-if="selectedTab === 'name'">
-        <label> Write the name of the country</label>
-        <br>
-        <input v-model="name" placeholder="ex: Brazil">
-        <button @click="getName">search</button>
-      </div>
-      <div>
-      <div class="item">
-        <div v-for="(flag, index) in flagsArray" :key="index" class="flag-container">
-          <img class="img-flag" :src="flag.flags.png" :alt="flag.flags.alt || flag.name.common" />
-          <p>{{ flag.name.common }}</p>
-        </div>
+    <div v-if="selectedTab === 'currency'" class="search-box">
+      <label for="currency">Write the currency abbreviation</label>
+      <input id="currency" v-model="currency" placeholder="Dollar ex: USD" />
+      <button @click="getCurrency" class="btn-search">Search</button>
+    </div>
+    <div v-if="selectedTab === 'name'" class="search-box">
+      <label>Write the name of the country</label>
+      <input  v-model="name" placeholder="ex: Brazil" />
+      <button @click="getName" class="btn-search">Search</button>
+    </div>
+    <button  class="btn-clear" @click="selectedTab = 'clear', getFlags()" >Clear search filters</button>
+    <div class="flags">
+      <div class="flag-container" v-for="(flag, index) in flagsArray" :key="index">
+        <img  class="img-flag" :src="flag.flags.png" :alt="flag.flags.alt || flag.name.common" />
+        <p>{{ flag.name.common }}</p>
       </div>
     </div>
   </div>
 </template>
-
 <script setup>
 import { onMounted, ref } from "vue";
 import { getAllFlags, getCountryCurrency, getCountryName} from "@/services/HttService";
@@ -79,34 +74,86 @@ onMounted(() => {
 </script>
 
 <style scoped>
+/* Container das abas */
 .tabs {
   display: flex;
   justify-content: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
+  gap: 2rem;
+  margin-bottom: 2rem;
 }
 
-.tabs button {
-  padding: 10px 20px;
+.tabs span {
+  font-size: 1.1rem;
+  font-weight: 500;
   cursor: pointer;
-  border: 1px solid #ccc;
-  background-color: #f0f0f0;
+  padding: 0.5rem 1rem;
   border-radius: 5px;
+  transition: background-color 0.3s, color 0.3s;
 }
 
-.tabs button:hover {
-  background-color: #ddd;
+.tabs span:hover, .tabs span.active {
+  background-color: #3c3d37;
+  color: #ecdfcc;
 }
 
-.item {
-  margin-top: 2rem;
+.search-box {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.search-box label {
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.search-box input {
+  margin: 10px;
+  padding: 0.8rem;
+  width: 100%;
+  max-width: 300px;
+  border: 1px solid #ccc;
+  border-radius: 7px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.search-box input:focus {
+  border-color: #3c3d37;
+}
+.btn-clear {
+  display: inline-block;
+  padding: 10px;
+  margin: 1rem auto;
+  color: white;
+  background-color: #3c3d37;
+  border: 1px solid #3c3d37;
+  border-radius: 15px;
+}
+.btn-search {
+  margin-top: 1rem;
+
+  padding: 0.8rem 1.5rem;
+  background-color: #3c3d37;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-search:hover {
+  background-color: #697565;
+}
+
+
+.flags {
   display: grid;
-  grid-template-columns: repeat(8, 1fr); /* 8 colunas */
+  grid-template-columns: repeat(8, 1fr);
   gap: 20px;
-  justify-content: center;
-  align-items: center;
-  width: 80%; /* Ajuste conforme necessário */
-  margin: auto;
+  justify-items: center;
+  padding: 1rem;
 }
 
 .flag-container {
@@ -116,19 +163,14 @@ onMounted(() => {
 .img-flag {
   width: 100px;
   height: auto;
-  border: 1px solid #ccc;
   border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s;
 }
 
-@media (max-width: 1024px) {
-  .item {
-    grid-template-columns: repeat(4, 1fr); /* 4 bandeiras por linha em telas médias */
-  }
+.img-flag:hover {
+  transform: scale(1.1);
 }
 
-@media (max-width: 768px) {
-  .item {
-    grid-template-columns: repeat(2, 1fr); /* 2 bandeiras por linha em telas pequenas */
-  }
-}
+
 </style>
