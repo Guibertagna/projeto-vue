@@ -1,14 +1,18 @@
-import { getCountryLanguage } from '@/services/HttService';
+import { getCountryLanguage, getCoutryByName } from '@/services/HttService';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { getAllFlags, getCountryCurrency, getCountryName  } from '@/services/HttService';
+
 export const useCountryStore = defineStore ('country', ()=>{
-    const name = ref('');
+const name = ref('');
+const pais = ref('')
 const language = ref('');
 const allFlagsArray = ref([])
 const currency = ref('');
 const filtred = ref(false);
+const coutrySearched = ref([])
 const flagsArray = ref([]);
+
 const selectedTab = ref(''); 
 async function getFlags() {
     try {
@@ -39,11 +43,22 @@ async function getFlags() {
       filtred.value = true
     } catch (error) {
    
-    
+
       alert(name.value + " Invalid Country");
         name.value = ''
     }
   }
+  async function getByName(pais) { 
+    try {
+      const country = await getCoutryByName(pais); 
+      coutrySearched.value = country; 
+      console.log('Country searched:', coutrySearched.value); // Verifique o retorno da API
+    } catch (error) {
+
+      alert("Country not found: " + error);
+    }
+  }
+  
   async function getLanguage() {
     try {
       const country = await getCountryLanguage(language.value);
@@ -61,10 +76,13 @@ async function getFlags() {
     flagsArray,
     currency,
     name,
+    pais,
     allFlagsArray,
     filtred,
     language,
+    coutrySearched,
     selectedTab,
+    getByName,
     getFlags,
     getLanguage,
     getCurrency,

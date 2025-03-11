@@ -16,9 +16,22 @@
             return response.data
         }catch(error){
             console.error('error searching for currency', error);
-            throw error; e
+            throw error; 
         }
     }
+    export async function getCoutryByName(pais) {  // Receber o parâmetro pais
+        try {
+        
+            const response = await api.get(`name/${pais}`);
+            return response.data;
+        } catch (error) {
+    
+            console.error('error searching by name ', error);
+            throw error; 
+
+        }
+    }
+    
     export async function getCountryLanguage(language){
         try{
             const response = await api.get(`lang/${language}`)

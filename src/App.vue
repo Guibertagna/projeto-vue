@@ -1,6 +1,6 @@
 
 <template>
-  <div class="container">
+  <div >
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <router-link to="/" class="back-button">
       <span class="material-icons">arrow_back</span>
@@ -17,17 +17,6 @@
     left: 0%;
     padding: 8px;
   }
-  .tudo{
-    height: 100vh;
-    width: 100vh;
-  }
-  .container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  text-align: center;
-}
+  
 
 </style>
