@@ -1,78 +1,98 @@
 <template>
   <div>
-    <!-- Abas -->
-    <div class="tabs">
-      <span @click="selectedTab = 'currency'" :class="{'active': selectedTab === 'currency'}">Search by currency</span>
-      <span @click="selectedTab = 'name'" :class="{'active': selectedTab === 'name'}">Search by name</span>
+    <div>
+      <div class="tabs">
+        <span @click="countryStore.selectedTab = 'currency'" :class="{'active': countryStore.selectedTab === 'currency'}">Search by currency</span>
+        <span @click="countryStore.selectedTab = 'name'" :class="{'active': countryStore.selectedTab === 'name'}">Search by name</span>
+        <span @click="countryStore.selectedTab = 'language'" :class="{'active': countryStore.selectedTab === 'language'}">Search by language</span>
+      </div>
     </div>
-    <div v-if="selectedTab === 'currency'" class="search-box">
+    <div v-if="countryStore.selectedTab === 'currency'" class="search-box">
       <label for="currency">Write the currency abbreviation</label>
-      <input id="currency" v-model="currency" placeholder="Dollar ex: USD" />
-      <button @click="getCurrency" class="btn-search">Search</button>
+      <input id="currency" v-model="countryStore.currency" placeholder="Dollar ex: USD" />
+      <button @click="countryStore.getCurrency" class="btn-search">Search</button>
     </div>
-    <div v-if="selectedTab === 'name'" class="search-box">
+    <div v-if="countryStore.selectedTab === 'name'" class="search-box">
       <label>Write the name of the country</label>
-      <input  v-model="name" placeholder="ex: Brazil" />
-      <button @click="getName" class="btn-search">Search</button>
+      <input v-model="countryStore.name" placeholder="ex: Brazil" />
+      <button @click="countryStore.getName" class="btn-search">Search</button>
     </div>
-    <button  class="btn-clear" @click="selectedTab = 'clear', getFlags()" >Clear search filters</button>
-    <div class="flags">
-      <div class="flag-container" v-for="(flag, index) in flagsArray" :key="index">
-        <img  class="img-flag" :src="flag.flags.png" :alt="flag.flags.alt || flag.name.common" />
+    <div v-if="countryStore.selectedTab === 'language'" class="search-box">
+      <label>Write the language of the country</label>
+      <input v-model="countryStore.language" placeholder="ex: Portuguese" />
+      <button class="btn-search" @click="countryStore.getLanguage">Search</button>
+    </div>
+    <button class="btn-clear" @click="countryStore.filtred = false, countryStore.selectedTab = 'clear'">Clear search filters</button>
+
+    <div class="flags" v-if="countryStore.filtred === true">
+      <div class="flag-container" v-for="(flag, index) in paginatedFlags" :key="index">
+        <img class="img-flag" :src="flag.flags.png" :alt="flag.flags.alt || flag.name.common" />
         <p>{{ flag.name.common }}</p>
       </div>
     </div>
+    <div class="flags" v-if="countryStore.filtred === false">
+      <div class="flag-container" v-for="(flag, index) in paginatedAllFlags" :key="index">
+        <img class="img-flag" :src="flag.flags.png" :alt="flag.flags.alt || flag.name.common" />
+        <p>{{ flag.name.common }}</p>
+      </div>
+    </div>
+
+    <div class="pagination">
+      <button class="previus" @click="prevPage" :disabled="currentPage === 1">Previous</button>
+      <span>Page {{ currentPage }} of {{ totalPages }}</span>
+      <button class="next" @click="nextPage" :disabled="currentPage === totalPages">Next</button>
+    </div>
+
+
+    <footer style="margin: 100px;">
+      allFlagsArrayA
+      allFlagsArray
+      laalala
+    </footer>
   </div>
 </template>
+
 <script setup>
-import { onMounted, ref } from "vue";
-import { getAllFlags, getCountryCurrency, getCountryName} from "@/services/HttService";
-const name = ref('');
-const currency = ref('');
-const flagsArray = ref([]);
-const isFiltred = ref(true);
-const selectedTab = ref('todas'); // Define a aba selecionada
+import { ref, computed, onMounted } from "vue";
+import { useCountryStore } from "@/stores/country";
 
-async function getFlags() {
-  try {
-    const flags = await getAllFlags();
-    isFiltred.value = true;
-    flagsArray.value = flags;
-  } catch (error) {
-    console.error("Erro ao buscar bandeiras:", error);
-  }
-}
-
-async function getCurrency() {
-  try {
-    const flags = await getCountryCurrency(currency.value);
-    flagsArray.value = flags;
-    console.log(flagsArray.value);
-  } catch (error) {
-    getFlags();
-    alert( currency.value + " Invalid currency");
-  }
-}
-async function getName() {
-  try {
-    const flags = await getCountryName(name.value);
-    flagsArray.value = flags;
-    name.value = ''
-  } catch (error) {
-    getFlags();
-  
-    alert(name.value + " Invalid Country");
-      name.value = ''
-  }
-}
-
-
+const countryStore = useCountryStore();
+const currentPage = ref(1);
+const itemsPerPage = 48;
 
 onMounted(() => {
-  getFlags();
+  countryStore.getFlags();
 });
-</script>
 
+const paginatedFlags = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
+  return countryStore.flagsArray.slice(start, end);
+});
+
+const paginatedAllFlags = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
+  return countryStore.allFlagsArray.slice(start, end);
+});
+
+const totalPages = computed(() => {
+  const totalItems = countryStore.filtred ? countryStore.flagsArray.length : countryStore.allFlagsArray.length;
+  return Math.ceil(totalItems / itemsPerPage);
+});
+
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value++;
+  }
+};
+
+const prevPage = () => {
+  if (currentPage.value > 1) {
+    currentPage.value--;
+  }
+};
+</script>
 <style scoped>
 /* Container das abas */
 .tabs {
@@ -132,7 +152,6 @@ onMounted(() => {
 }
 .btn-search {
   margin-top: 1rem;
-
   padding: 0.8rem 1.5rem;
   background-color: #3c3d37;
   color: white;
@@ -154,6 +173,28 @@ onMounted(() => {
   gap: 20px;
   justify-items: center;
   padding: 1rem;
+}
+
+.next{
+  color: blue;
+  text-decoration:underline;
+  border: none;
+  margin: 10px;
+  background-color: transparent;
+}
+.previus{
+  border: none;
+  background-color: transparent;
+  color: blue;
+  text-decoration:underline;
+  margin: 10px;
+}
+
+button:disabled {
+  
+  color: #a0a0a0; /* Texto mais apagado */
+  cursor: not-allowed;
+  opacity: 0.6; /* Reduz a opacidade */
 }
 
 .flag-container {
