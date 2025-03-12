@@ -4,7 +4,6 @@ import HomeComponent from "../components/HomeComponent.vue";
 </script>
 <template>
     <div>
-        <HeaderComponent/>
         <HomeComponent />
     </div>
 </template>

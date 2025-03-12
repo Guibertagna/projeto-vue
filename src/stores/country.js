@@ -17,7 +17,6 @@ const selectedTab = ref('');
 async function getFlags() {
     try {
       const country = await getAllFlags();
-      
       allFlagsArray.value = country;
       filtred.value = false
     } catch (error) {

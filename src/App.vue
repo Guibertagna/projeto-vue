@@ -1,10 +1,17 @@
+<script setup >
+import HeaderComponent from './components/HeaderComponent.vue';
+import {  onMounted } from "vue";
+import { useCountryStore } from './stores/country';
+const countryStore = useCountryStore()
+onMounted(() => {
+    countryStore.getFlags();
+});
+</script>
+
 
 <template>
   <div >
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <router-link to="/" class="back-button">
-      <span class="material-icons">arrow_back</span>
-    </router-link>
+    <HeaderComponent/>
     <router-view ></router-view>
   </div>
 </template>

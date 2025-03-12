@@ -1,47 +1,95 @@
 <template>
-  <div class="container">
+  <div class="container-home">
     <div class="tabs">
-      <span @click="countryStore.selectedTab = 'currency'" :class="{'active': countryStore.selectedTab === 'currency'}">Search by currency</span>
-      <span @click="countryStore.selectedTab = 'name'" :class="{'active': countryStore.selectedTab === 'name'}">Search by name</span>
-      <span @click="countryStore.selectedTab = 'language'" :class="{'active': countryStore.selectedTab === 'language'}">Search by language</span>
+      <span
+        @click="countryStore.selectedTab = 'currency'"
+        :class="{ active: countryStore.selectedTab === 'currency' }"
+        >Search by currency</span
+      >
+      <span
+        @click="countryStore.selectedTab = 'name'"
+        :class="{ active: countryStore.selectedTab === 'name' }"
+        >Search by name</span
+      >
+      <span
+        @click="countryStore.selectedTab = 'language'"
+        :class="{ active: countryStore.selectedTab === 'language' }"
+        >Search by language</span
+      >
     </div>
 
     <div v-if="countryStore.selectedTab" class="search-box">
       <div class="label-box">
-        <label v-if="countryStore.selectedTab === 'currency'" >Write the currency abbreviation</label>
-      <label v-if="countryStore.selectedTab === 'name'">Write the name of the country </label>
-      <label v-if="countryStore.selectedTab === 'language'">Write the language of the country</label>
+        <label v-if="countryStore.selectedTab === 'currency'"
+          >Write the currency abbreviation</label
+        >
+        <label v-if="countryStore.selectedTab === 'name'"
+          >Write the name of the country
+        </label>
+        <label v-if="countryStore.selectedTab === 'language'"
+          >Write the language of the country</label
+        >
       </div>
 
-      <input 
-        v-if="countryStore.selectedTab === 'currency'" 
-        id="currency" v-model="countryStore.currency" placeholder="Dollar ex: USD" 
+      <input
+        v-if="countryStore.selectedTab === 'currency'"
+        id="currency"
+        v-model="countryStore.currency"
+        placeholder="Dollar ex: USD"
       />
-      <input 
-        v-if="countryStore.selectedTab === 'name'" 
-        v-model="countryStore.name" placeholder="ex: Brazil" 
+      <input
+        v-if="countryStore.selectedTab === 'name'"
+        v-model="countryStore.name"
+        placeholder="ex: Brazil"
       />
-      <input 
-        v-if="countryStore.selectedTab === 'language'" 
-        v-model="countryStore.language" placeholder="ex: Portuguese" 
+      <input
+        v-if="countryStore.selectedTab === 'language'"
+        v-model="countryStore.language"
+        placeholder="ex: Portuguese"
       />
 
-      <button @click="search" v-if="countryStore.selectedTab === 'language' || 'name' || 'currency'" class="btn-search">Search</button>
+      <button
+        @click="search"
+        v-if="countryStore.selectedTab === 'language' || 'name' || 'currency'"
+        class="btn-search"
+      >
+        Search
+      </button>
     </div>
 
-    <button class="btn-clear" @click="clearFilters">Clear search filters</button>
+    <button class="btn-clear" @click="clearFilters">
+      Clear search filters
+    </button>
 
-    <div class="flags" >
-      <div class="flag-container" v-for="(flag, index) in paginatedFlags" :key="index" @click="goToCoutryDetails(flag.name.common)">
-        <img class="img-flag" :src="flag.flags.png" :alt="flag.flags.alt || flag.name.common" @click="goToCoutryDetails(flag.name.common)" />
-        <p>{{ flag.name.common }} </p>
+    <div class="flags">
+      <div
+        class="flag-container"
+        v-for="(flag, index) in paginatedFlags"
+        :key="index"
+        @click="goToCoutryDetails(flag.name.common)"
+      >
+        <img
+          class="img-flag"
+          :src="flag.flags.png"
+          :alt="flag.flags.alt || flag.name.common"
+          @click="goToCoutryDetails(flag.name.common)"
+        />
+        <p>{{ flag.name.common }}</p>
       </div>
     </div>
 
     <div class="pagination">
-      <button class="previus" @click="prevPage" :disabled="currentPage === 1">Previous</button>
+      <button class="previus" @click="prevPage" :disabled="currentPage === 1">
+        Previous
+      </button>
       <span>Page {{ currentPage }} of {{ totalPages }}</span>
-      <button class="next" @click="nextPage" :disabled="currentPage === totalPages">Next</button>
+      <button
+        class="next"
+        @click="nextPage"
+        :disabled="currentPage === totalPages"
+      >
+        Next
+      </button>
     </div>
 
     <footer>
@@ -59,22 +107,25 @@ const countryStore = useCountryStore();
 const currentPage = ref(1);
 const itemsPerPage = 48;
 
+const goToCoutryDetails = (countryName) => {
+  router.push(`/country/${countryName}`);
+};
 onMounted(() => {
-  countryStore.getFlags();
+    countryStore.getFlags();
 });
-
-const goToCoutryDetails = (countryName)=>{
-  router.push(`/country/${countryName}`)
-}
 
 const paginatedFlags = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage;
   const end = start + itemsPerPage;
-  return countryStore.filtred ? countryStore.flagsArray.slice(start, end) : countryStore.allFlagsArray.slice(start, end);
+  return countryStore.filtred
+    ? countryStore.flagsArray.slice(start, end)
+    : countryStore.allFlagsArray.slice(start, end);
 });
 
 const totalPages = computed(() => {
-  const totalItems = countryStore.filtred ? countryStore.flagsArray.length : countryStore.allFlagsArray.length;
+  const totalItems = countryStore.filtred
+    ? countryStore.flagsArray.length
+    : countryStore.allFlagsArray.length;
   return Math.ceil(totalItems / itemsPerPage);
 });
 
@@ -102,18 +153,17 @@ const search = () => {
 
 const clearFilters = () => {
   countryStore.filtred = false;
-  countryStore.selectedTab = '';
+  countryStore.selectedTab = "";
 };
 </script>
 
 <style scoped>
 /* Centraliza todo o conteúdo */
-.container{
+.container-home {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin: 0 auto;
-
 }
 
 /* Estilização das abas */
@@ -133,7 +183,8 @@ const clearFilters = () => {
   transition: background-color 0.3s, color 0.3s;
 }
 
-.tabs span:hover, .tabs span.active {
+.tabs span:hover,
+.tabs span.active {
   background-color: #3c3d37;
   color: #ecdfcc;
 }
@@ -144,7 +195,7 @@ const clearFilters = () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap : 40px;
+  gap: 40px;
   margin-bottom: 2rem;
 }
 
@@ -170,8 +221,8 @@ const clearFilters = () => {
 }
 
 /* Botões */
-.btn-search, .btn-clear {
- 
+.btn-search,
+.btn-clear {
   padding: 0.8rem 1.5rem;
   background-color: #3c3d37;
   color: white;
@@ -182,7 +233,8 @@ const clearFilters = () => {
   transition: background-color 0.3s;
 }
 
-.btn-search:hover, .btn-clear:hover {
+.btn-search:hover,
+.btn-clear:hover {
   background-color: #697565;
 }
 
@@ -226,7 +278,8 @@ const clearFilters = () => {
   margin-top: 1rem;
 }
 
-.previus, .next {
+.previus,
+.next {
   border: none;
   background-color: transparent;
   color: blue;
