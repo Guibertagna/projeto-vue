@@ -41,8 +41,6 @@ async function getFlags() {
       name.value = ''
       filtred.value = true
     } catch (error) {
-   
-
       alert(name.value + " Invalid Country");
         name.value = ''
     }

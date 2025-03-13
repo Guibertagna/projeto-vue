@@ -7,7 +7,7 @@
     <nav class="nav">
       <router-link to="/" class="nav-link">Home</router-link>
       <router-link to="/game" class="nav-link">Game</router-link>
-      <router-link to="/contact" class="nav-link">Contato</router-link>
+      <router-link to="/fav" class="nav-link">Favoritos</router-link>
     </nav>
 
   

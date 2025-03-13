@@ -66,15 +66,15 @@
         class="flag-container"
         v-for="(flag, index) in paginatedFlags"
         :key="index"
-        @click="goToCoutryDetails(flag.name.common)"
-      >
+       >
         <img
           class="img-flag"
           :src="flag.flags.png"
-          :alt="flag.flags.alt || flag.name.common"
-          @click="goToCoutryDetails(flag.name.common)"
+          :alt="flag.flags.alt || flag.name.official"
+          @click="goToCoutryDetails(flag.name.official)"
         />
-        <p>{{ flag.name.common }}</p>
+        <p>{{ flag.name.official }}</p>
+      
       </div>
     </div>
 
@@ -102,18 +102,34 @@
 import { ref, computed, onMounted } from "vue";
 import { useCountryStore } from "@/stores/country";
 import { useRouter } from "vue-router";
+import { useFavoriteCountryStore } from "@/stores/favorite";
 const router = useRouter();
+const favoriteStore = useFavoriteCountryStore();
 const countryStore = useCountryStore();
 const currentPage = ref(1);
 const itemsPerPage = 48;
+
 
 const goToCoutryDetails = (countryName) => {
   router.push(`/country/${countryName}`);
 };
 onMounted(() => {
+  favoriteStore.loadFavorites();
+
     countryStore.getFlags();
 });
+const countryName = computed(() => countryStore.coutrySearched[0]?.name?.official);
 
+
+const isFavorite = computed(() => favoriteStore.favoriteCountries.includes(countryName.value));
+
+function toggleFavorite() {
+  if (isFavorite.value) {
+    favoriteStore.removeFavorite(countryName.value);
+  } else {
+    favoriteStore.addFavorite(countryName.value);
+  }
+}
 const paginatedFlags = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage;
   const end = start + itemsPerPage;

@@ -18,8 +18,14 @@
       <div v-else>
         <div class="header">
           <img :src="countryStore.coutrySearched[0].flags.png" alt="Flag" class="flag"/>
-          <h1>{{ countryStore.coutrySearched[0].name.common }}</h1>
+          <h1>{{ countryStore.coutrySearched[0].name.official }}</h1>
+          
+          <!-- Botão de Favorito -->
+          <button @click="toggleFavorite" class="favorite-btn">
+            {{ isFavorite ? '★' : '☆' }}
+          </button>
         </div>
+        
         <div class="details">
           <p><strong>Capital:</strong> {{ countryStore.coutrySearched[0].capital[0] }}</p>
           <p><strong>Population:</strong> {{ countryStore.coutrySearched[0].population.toLocaleString() }}</p>
@@ -27,8 +33,8 @@
           <p><strong>Languages:</strong> {{ Object.values(countryStore.coutrySearched[0].languages).join(', ') }}</p>
           <p><strong>Currency:</strong> {{ Object.values(countryStore.coutrySearched[0].currencies)[0].name }}</p>
           <a :href="countryStore.coutrySearched[0].maps.googleMaps" target="_blank" rel="noopener noreferrer">
-  <strong style="color: blue">Ver no Google Maps</strong>
-</a>
+            <strong style="color: blue">Ver no Google Maps</strong>
+          </a>
         </div>
       </div>
     </div>
@@ -36,17 +42,21 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useCountryStore } from '@/stores/country';
+import { useFavoriteCountryStore } from '@/stores/favorite';
 
 const route = useRoute();
 const countryStore = useCountryStore();
+const favoriteStore = useFavoriteCountryStore();
 const loading = ref(true);
 
+// Carregar os favoritos ao montar o componente
 onMounted(() => {
-  const pais = route.params.name;
+  favoriteStore.loadFavorites();
 
+  const pais = route.params.name;
   if (pais) {
     countryStore.getByName(pais).finally(() => {
       loading.value = false;
@@ -55,6 +65,20 @@ onMounted(() => {
     console.error('Country name is missing in the route.');
   }
 });
+
+
+const countryName = computed(() => countryStore.coutrySearched[0]);
+
+
+const isFavorite = computed(() => favoriteStore.favoriteCountries.includes(countryName.value));
+
+function toggleFavorite() {
+  if (isFavorite.value) {
+    favoriteStore.removeFavorite(countryName.value);
+  } else {
+    favoriteStore.addFavorite(countryName.value);
+  }
+}
 </script>
 
 <style scoped>
