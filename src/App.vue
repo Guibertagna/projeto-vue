@@ -4,7 +4,7 @@ import {  onMounted } from "vue";
 import { useCountryStore } from './stores/country';
 const countryStore = useCountryStore()
 onMounted(() => {
-    countryStore.getFlags();
+    
 });
 </script>
 

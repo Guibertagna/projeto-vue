@@ -1,9 +1,13 @@
 <template>
     <div>
       <h1>Game</h1>
-      <div>
-        <h3>Random Flags:</h3>
-        <div class="flags">
+      <div>   
+        <div class="name">
+          <div v-if="random_name.length">
+  <h3>{{ random_name[0].name.common }}</h3>
+</div>
+        </div>
+        <div class="coutries">
           <div v-for="(flag, index) in randomFlags" :key="index">
             <img :src="flag.flags.png" alt="Flag" />
           </div>
@@ -21,9 +25,13 @@
   const allCountries = ref([]);
   const randomFlags = ref([]);
   const countryStore = useCountryStore();
+  const random_name = ref([]);
   
   function startGame() {
-    randomFlags.value = []; // Limpar a lista de bandeiras aleatórias
+    allCountries.value = countryStore.allFlagsArray;
+    console.log(allCountries.value); // Verificar se as bandeiras foram carregadas corretamente
+    randomFlags.value = [];
+    random_name.value = []; // Limpar a lista de bandeiras aleatórias
     console.log(randomFlags.value.length);
   
     while (randomFlags.value.length < 4) {
@@ -32,18 +40,19 @@
         randomFlags.value.push(allCountries.value[randomIndex]);
       }
     }
-  
-    console.log(randomFlags.value);
+    const randomIndexName = Math.floor(Math.random() * randomFlags.value.length);
+    console.log(randomIndexName)
+    random_name.value.push(randomFlags.value[randomIndexName])
+    console.log(random_name.value)
   }
   
   onMounted(() => {
-    allCountries.value = countryStore.allFlagsArray;
-    console.log(allCountries.value); // Verificar se as bandeiras foram carregadas corretamente
+    countryStore.getFlags();
   });
   </script>
   
   <style scoped>
-  .flags {
+  .coutries {
     display: grid;
     grid-template-columns: repeat(2, 1fr); /* 2 bandeiras por linha */
     gap: 20px;
@@ -53,7 +62,7 @@
     padding: 1rem;
   }
   
-  .flags img {
+  .coutries img {
     max-width: 100%; /* Garante que a imagem se ajuste corretamente */
     height: auto;
   }
