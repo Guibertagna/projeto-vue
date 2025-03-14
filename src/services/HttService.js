@@ -19,7 +19,7 @@
             throw error; 
         }
     }
-    export async function getCoutryByName(pais) {  // Receber o parâmetro pais
+    export async function getCoutryByName(pais) { 
         try {
         
             const response = await api.get(`name/${pais}`);

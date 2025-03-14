@@ -4,6 +4,7 @@ import { ref } from 'vue';
 export const useFavoriteCountryStore = defineStore('favorites', () => {
    
     const favoriteCountries = ref([]);
+   
     function saveFavorite() {
         if (typeof localStorage !== "undefined") {
             localStorage.setItem('favoriteCountries', JSON.stringify(favoriteCountries.value));
@@ -13,16 +14,14 @@ export const useFavoriteCountryStore = defineStore('favorites', () => {
     }
     
     function addFavorite(country) {
-        console.log("Entrou no add favorite no store" + country)
         if (country?.name && country?.flags) {
-            const countryName = typeof country.name === 'object' ? country.name.official : country.name;
-            // Acessa o link da bandeira corretamente
-            const countryFlag = country.flags.png; // Verifique se "png" é a propriedade correta
+            const countryName = country.name.official;
+            const countryFlag = country.flags.png; 
             const exists = favoriteCountries.value.some(c => c.name === countryName);
             if (!exists) {
                 favoriteCountries.value.push({
                     name: countryName,
-                    img: countryFlag // Aqui estamos armazenando o link correto da bandeira
+                    img: countryFlag 
                 });
                 saveFavorite();
             }
@@ -48,16 +47,11 @@ export const useFavoriteCountryStore = defineStore('favorites', () => {
     }
 
     function removeFavorite(country) {
-        if (country?.name) {
-            const countryName = typeof country.name === 'object' ? country.name.official : country.name;
-            favoriteCountries.value = favoriteCountries.value.filter(c => c.name !== countryName);
-            saveFavorite();
-            console.log("Removendo país:", country);
-            console.log("Estados antes da remoção:", favoriteCountries.value);
-
-        } else {
-            console.error('Country data is incomplete for removal:', country);
+        if (!country?.name) {
+            return console.error('Country data is incomplete for removal:', country);
         }
+        favoriteCountries.value = favoriteCountries.value.filter(c => c.name !== (country.name));
+        saveFavorite();
     }
     
     

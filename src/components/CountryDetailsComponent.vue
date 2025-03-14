@@ -7,8 +7,6 @@
         <span class="material-icons">arrow_back</span>
       </router-link>
     </div>
-
-    <!-- Card de Informações -->
     <div class="card">
       <div v-if="loading" class="loading-container">
         <div class="loading-spinner"></div>

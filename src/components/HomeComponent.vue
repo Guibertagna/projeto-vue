@@ -60,20 +60,27 @@
     <button class="btn-clear" @click="clearFilters">
       Clear search filters
     </button>
-
-    <div class="flags">
-      <div
+    <div class="flags"  v-if="isLoading">
+      <div v-for="index in itemsPerPage" :key="index" class="flag-container skeleton" >
+          <div class="skeleton-img"></div>
+          <div class="skeleton-text"></div>
+        </div>
+    </div>
+    <div class="flags" v-else > 
+     
+  <div
         class="flag-container"
         v-for="(flag, index) in paginatedFlags"
         :key="index"
        >
+
         <img
           class="img-flag"
           :src="flag.flags.png"
           :alt="flag.flags.alt || flag.name.official"
           @click="goToCoutryDetails(flag.name.official)"
         />
-        <p >
+        <p>
   {{ flag.name.official }}
 </p>
 
@@ -108,16 +115,19 @@ const favoriteStore = useFavoriteCountryStore();
 const countryStore = useCountryStore();
 const currentPage = ref(1);
 const itemsPerPage = 48;
-
+const isLoading = ref(true);
 
 const goToCoutryDetails = (countryName) => {
   router.push(`/country/${countryName}`);
 };
-onMounted(() => {
-    favoriteStore.loadFavorites();
-    countryStore.getFlags();
-});
 
+onMounted(async () => {
+  favoriteStore.loadFavorites();
+  await countryStore.getFlags();
+  setTimeout(() => {
+    isLoading.value = false;
+  }, 1000);
+});
 const paginatedFlags = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage;
   const end = start + itemsPerPage;
@@ -136,12 +146,28 @@ const totalPages = computed(() => {
 const nextPage = () => {
   if (currentPage.value < totalPages.value) {
     currentPage.value++;
+    isLoading.value = true;
+    window.scrollTo({
+        top: 0,          // Posição no eixo Y (topo)
+        behavior: 'smooth' // Rolagem suave
+      });
+    setTimeout(() => {
+    isLoading.value = false;
+  }, 1000);
   }
 };
 
 const prevPage = () => {
   if (currentPage.value > 1) {
     currentPage.value--;
+    isLoading.value = true;
+    window.scrollTo({
+        top: 0,          
+        behavior: 'smooth' 
+      });
+    setTimeout(() => {
+    isLoading.value = false;
+  }, 1000);
   }
 };
 
@@ -302,5 +328,37 @@ button:disabled {
 }
 
 
+.skeleton {
+  background-color: #ddd;
+  border-radius: 5px;
+  padding: 10px;
+}
 
+.skeleton-img {
+  width: 100px;
+  height: 60px;
+  background: linear-gradient(90deg, #ddd, #ccc, #ddd);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  border-radius: 5px;
+}
+
+.skeleton-text {
+  width: 80px;
+  height: 12px;
+  margin-top: 10px;
+  background: linear-gradient(90deg, #ddd, #ccc, #ddd);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  border-radius: 3px;
+}
+
+@keyframes loading {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
 </style>
