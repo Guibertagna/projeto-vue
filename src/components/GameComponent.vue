@@ -16,6 +16,8 @@
         <h4>Current sequence: {{ sequence }}</h4>
         <h4>Hit: {{ counter }}</h4>
         <h4>Best Sequence: {{ bestSequence }}</h4>
+        <h4>Accuracy: {{ percentage }}%</h4>
+
       </div>
     </div>
 
@@ -61,9 +63,8 @@
 
 <script setup>
 import { useCountryStore } from "@/stores/country";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 
-// Definindo as variáveis reativas
 const allCountries = ref([]);
 const randomFlags = ref([]);
 const countryStore = useCountryStore();
@@ -74,7 +75,10 @@ const sequence = ref(0);
 const rodada = ref(0);
 const selectedFlag = ref("");
 const isError = ref(false);
-
+onMounted(async () => {
+  await countryStore.getFlags();
+  startGame();
+});
 function startGame() {
   allCountries.value = countryStore.allFlagsArray;
   randomFlags.value = [];
@@ -110,7 +114,9 @@ function send() {
     startGame();
   }
 }
-
+const percentage = computed(() => {
+  return rodada.value > 0 ? ((counter.value / rodada.value) * 100).toFixed(2) : 0;
+});
 function restart() {
   randomFlags.value = [];
   random_name.value = [];
@@ -119,10 +125,7 @@ function restart() {
   startGame();
 }
 
-onMounted(async () => {
-  await countryStore.getFlags();
-  startGame();
-});
+
 </script>
 
 <style scoped>
