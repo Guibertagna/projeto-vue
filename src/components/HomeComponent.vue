@@ -95,10 +95,6 @@
         Next
       </button>
     </div>
-
-    <footer>
-      <p>All Flags Data</p>
-    </footer>
   </div>
 </template>
 
@@ -118,7 +114,7 @@ const goToCoutryDetails = (countryName) => {
   router.push(`/country/${countryName}`);
 };
 onMounted(() => {
-  favoriteStore.loadFavorites();
+    favoriteStore.loadFavorites();
     countryStore.getFlags();
 });
 
@@ -166,8 +162,9 @@ const clearFilters = () => {
 </script>
 
 <style scoped>
-/* Centraliza todo o conteúdo */
+
 .container-home { 
+  min-height: 80vh;
   background-color: #E0F7FA;
   display: flex;
   flex-direction: column;
@@ -175,7 +172,7 @@ const clearFilters = () => {
   margin: 0 auto;
 }
 
-/* Estilização das abas */
+
 .tabs {
   display: flex;
   justify-content: center;
@@ -199,7 +196,6 @@ const clearFilters = () => {
   color: white;
 }
 
-/* Caixa de busca */
 .search-box {
   padding: 40px;
   display: flex;
@@ -306,10 +302,5 @@ button:disabled {
 }
 
 
-footer {
-  margin-top: 2rem;
-  text-align: center;
-  font-size: 0.9rem;
-  color: #666;
-}
+
 </style>
