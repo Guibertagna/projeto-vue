@@ -51,11 +51,13 @@ onMounted(() => {});
 /* Navegação */
 .nav {
   display: flex;
+  align-items: end;
   gap: 25px;
 }
 
 .nav-link {
   text-decoration: none;
+
   color: #ffff;
   font-size: 16px;
   font-weight: 500;

@@ -1,6 +1,13 @@
 <template>
   <div class="favorites-container">
-    <h1 v-if="countries.length > 0" >Favorite Countries</h1>
+    <div class="back">
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <router-link to="/" class="back-button">
+        <span class="material-icons">arrow_back</span>
+      </router-link>
+    </div>
+   <div v-if="countries.length > 0"> <strong>
+    <h1  >Favorite Countries</h1></strong></div>
     <div v-else class="no-favorites">
       <img src="../assets/empty-folder.png" alt="Nenhum favorito" class="no-favorites-img">
       <p class="no-favorites-text">It looks like you haven't favorited any countries yet.</p>
@@ -52,6 +59,12 @@ function remove(country) {
   gap: 20px;
   justify-content: center;
   margin-top: 20px;
+}
+.back {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%; 
+  margin-bottom: 20px; 
 }
 
 .country-card {

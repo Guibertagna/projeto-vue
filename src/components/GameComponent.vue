@@ -178,7 +178,7 @@ onMounted(async () => {
   display: inline-block;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
-.
+
 .back-button {
   display: flex;
   align-items: center;
