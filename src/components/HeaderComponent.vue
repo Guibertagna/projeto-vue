@@ -1,105 +1,64 @@
 <template>
   <header class="header">
-  
-    <router-link to="/" class="logo">WorldFlags</router-link>
+    <img src="../assets/falgs-removebg-preview.png" class="logo-img" alt="Logo"/>
 
- 
     <nav class="nav">
       <router-link to="/" class="nav-link">Home</router-link>
       <router-link to="/game" class="nav-link">Game</router-link>
       <router-link to="/fav" class="nav-link">Favoritos</router-link>
     </nav>
-
-  
   </header>
 </template>
 
 <script setup>
 import { ref, onMounted } from "vue";
 
-
-
-
-onMounted(() => {
-  
-});
+onMounted(() => {});
 </script>
 
 <style scoped>
-
+/* Header clean e elegante */
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: #fff;
+  background-color: #35828D;
   color: #333;
-  padding: 15px 20px;
-  box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.1);
+  padding: 10px 50px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  margin: 0; 
+  height: 100px; 
 }
 
-/* Logo */
-.logo {
-  font-size: 20px;
-  font-weight: bold;
+/* Ajustando a classe "parse" para alinhar o título ao centro */
+.parse {
+  font-size: 22px;
+  font-weight: 600;
   text-decoration: none;
-  color: #333;
+  color: #ffff;
+  transition: color 0.3s ease;
+  flex-grow: 1;  /* Isso vai fazer o h1 ocupar o espaço disponível */
+  text-align: center; /* Alinha o texto no centro */
+  margin: 0; /* Remove margem para evitar deslocamento */
+}
+
+/* Reduzindo o tamanho da imagem do logo */
+.logo-img {
+  height: 100px; /* Ajuste o tamanho conforme necessário */
+  width: auto;
 }
 
 /* Navegação */
 .nav {
   display: flex;
-  gap: 20px;
+  gap: 25px;
 }
 
 .nav-link {
   text-decoration: none;
-  color: #555;
+  color: #ffff;
   font-size: 16px;
-  transition: color 0.3s ease;
-}
-
-.nav-link:hover {
-  color: #000;
-}
-
-/* Botão de Dark Mode */
-.dark-mode-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 20px;
-  color: #555;
-  transition: color 0.3s ease;
-}
-
-.dark-mode-btn:hover {
-  color: #000;
-}
-
-/* Dark Mode */
-.dark-mode {
-  background-color: #222;
-  color: #fff;
-}
-
-.dark-mode .header {
-  background-color: #333;
-  color: #fff;
-}
-
-.dark-mode .nav-link {
-  color: #ccc;
-}
-
-.dark-mode .nav-link:hover {
-  color: #fff;
-}
-
-.dark-mode .dark-mode-btn {
-  color: #fff;
-}
-
-.dark-mode .dark-mode-btn:hover {
-  color: #ccc;
+  font-weight: 500;
+  transition: color 0.3s ease, transform 0.2s ease;
 }
 </style>

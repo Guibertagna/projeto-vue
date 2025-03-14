@@ -1,5 +1,6 @@
 <script setup >
 import HeaderComponent from './components/HeaderComponent.vue';
+import FooterComponent from './components/FooterComponent.vue';
 import {  onMounted } from "vue";
 import { useCountryStore } from './stores/country';
 const countryStore = useCountryStore()
@@ -11,6 +12,7 @@ const countryStore = useCountryStore()
   <div >
     <HeaderComponent/>
     <router-view ></router-view>
+    <FooterComponent/>
   </div>
 </template>
 

@@ -73,7 +73,11 @@
           :alt="flag.flags.alt || flag.name.official"
           @click="goToCoutryDetails(flag.name.official)"
         />
-        <p>{{ flag.name.official }}</p>
+        <p >
+  {{ flag.name.official }}
+</p>
+
+
       
       </div>
     </div>
@@ -115,21 +119,9 @@ const goToCoutryDetails = (countryName) => {
 };
 onMounted(() => {
   favoriteStore.loadFavorites();
-
     countryStore.getFlags();
 });
-const countryName = computed(() => countryStore.coutrySearched[0]?.name?.official);
 
-
-const isFavorite = computed(() => favoriteStore.favoriteCountries.includes(countryName.value));
-
-function toggleFavorite() {
-  if (isFavorite.value) {
-    favoriteStore.removeFavorite(countryName.value);
-  } else {
-    favoriteStore.addFavorite(countryName.value);
-  }
-}
 const paginatedFlags = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage;
   const end = start + itemsPerPage;
@@ -175,7 +167,8 @@ const clearFilters = () => {
 
 <style scoped>
 /* Centraliza todo o conteúdo */
-.container-home {
+.container-home { 
+  background-color: #E0F7FA;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -193,16 +186,17 @@ const clearFilters = () => {
 .tabs span {
   font-size: 1.1rem;
   font-weight: 500;
+  color: #56A0AA;
   cursor: pointer;
   padding: 0.5rem 1rem;
-  border-radius: 5px;
+  border-radius: 0 0 5px 5px;
   transition: background-color 0.3s, color 0.3s;
 }
 
 .tabs span:hover,
 .tabs span.active {
-  background-color: #3c3d37;
-  color: #ecdfcc;
+  background-color: #35828D;
+  color: white;
 }
 
 /* Caixa de busca */
@@ -217,7 +211,7 @@ const clearFilters = () => {
 
 .search-box label {
   font-size: 1rem;
-  color: #333;
+  color: #36848F;
   display: block;
   margin-bottom: 0.5rem;
 }
@@ -225,22 +219,22 @@ const clearFilters = () => {
 .search-box input {
   padding: 0.8rem;
   width: 100%;
-  border: 1px solid #ccc;
+  border: 1px solid #36848F;
   border-radius: 7px;
   font-size: 1rem;
-  outline: none;
-  transition: border-color 0.3s;
+
 }
 
 .search-box input:focus {
-  border-color: #3c3d37;
+  border-color: #ffffff;
 }
 
-/* Botões */
+
+
 .btn-search,
 .btn-clear {
   padding: 0.8rem 1.5rem;
-  background-color: #3c3d37;
+  background-color: #36848F;
   color: white;
   border: none;
   border-radius: 5px;
@@ -251,10 +245,10 @@ const clearFilters = () => {
 
 .btn-search:hover,
 .btn-clear:hover {
-  background-color: #697565;
+  background-color: #1F737F;
 }
 
-/* Grid das bandeiras */
+
 .flags {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
@@ -265,11 +259,13 @@ const clearFilters = () => {
   padding: 1rem;
 }
 
-/* Estilização das bandeiras */
+
 .flag-container {
   display: flex;
   flex-direction: column;
   text-align: center;
+  color:  #36848F;
+
   align-items: center;
   justify-content: center;
 }
@@ -286,7 +282,7 @@ const clearFilters = () => {
   transform: scale(1.1);
 }
 
-/* Paginação */
+
 .pagination {
   display: flex;
   align-items: center;
@@ -309,7 +305,7 @@ button:disabled {
   opacity: 0.6;
 }
 
-/* Rodapé */
+
 footer {
   margin-top: 2rem;
   text-align: center;

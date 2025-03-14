@@ -20,7 +20,7 @@
           <img :src="countryStore.coutrySearched[0].flags.png" alt="Flag" class="flag"/>
           <h1>{{ countryStore.coutrySearched[0].name.official }}</h1>
           
-          <!-- Botão de Favorito -->
+      
           <button @click="toggleFavorite" class="favorite-btn">
             {{ isFavorite ? '★' : '☆' }}
           </button>
@@ -66,20 +66,24 @@ onMounted(() => {
   }
 });
 
-
 const countryName = computed(() => countryStore.coutrySearched[0]);
 
 
-const isFavorite = computed(() => favoriteStore.favoriteCountries.includes(countryName.value));
+const isFavorite = computed(() => {
+  return favoriteStore.favoriteCountries.some(c => c.name === countryName.value.name.official);
+});
 
 function toggleFavorite() {
   if (isFavorite.value) {
+    console.log(countryName.value)
     favoriteStore.removeFavorite(countryName.value);
   } else {
+    console.log("Toggle"+ countryName)
     favoriteStore.addFavorite(countryName.value);
   }
 }
 </script>
+
 
 <style scoped>
 /* Layout principal */
@@ -89,7 +93,7 @@ function toggleFavorite() {
   align-items: center;
   gap: 20px; /* Espaço entre os elementos */
   height: 100vh;
-  background-color: #f4f4f9;
+  background-color: #E0F7FA;
   padding: 20px;
 }
 
@@ -102,11 +106,8 @@ function toggleFavorite() {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: white;
-  border-radius: 50%;
   width: 40px;
   height: 40px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   text-decoration: none;
 }
 
@@ -117,7 +118,7 @@ function toggleFavorite() {
 
 /* Card */
 .card {
-  background-color: white;
+  background-color:  #35828D;
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   padding: 20px;
@@ -126,6 +127,7 @@ function toggleFavorite() {
 }
 
 .header {
+  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -139,6 +141,7 @@ function toggleFavorite() {
 }
 
 h1 {
+  color: white;
   font-size: 24px;
   font-weight: bold;
   margin: 0;
@@ -151,6 +154,7 @@ h1 {
 }
 
 .details p {
+  color: white;
   margin: 5px 0;
 }
 

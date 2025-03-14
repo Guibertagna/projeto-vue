@@ -9,22 +9,27 @@
         <span class="material-icons">arrow_back</span>
       </router-link>
     </div>
-    <h1>Select the flag that matches the country name</h1>
-    <h1 style="text-align: center">Placar</h1>
+    <h2 class="game-title">Select the flag that matches the country name</h2>
+
     <div class="placar">
-      <h3>seguence: {{ sequence }}</h3>
-      <h3>Acentos: {{ counter }}</h3>
-      <h3> Best Sequence: {{ bestSequence }}</h3>
-    </div>
-    <div class="name">
-      <h3>Rodada: {{ rodada }}</h3>
-      <div v-if="random_name.length">
-        <h1>Coutry name: {{ random_name[0].name.common }}</h1>
+      <div class="score-box">
+        <h4>Current sequence: {{ sequence }}</h4>
+        <h4>Hit: {{ counter }}</h4>
+        <h4>Best Sequence: {{ bestSequence }}</h4>
       </div>
     </div>
-    <div class="coutries">
-      <div v-for="(flag, index) in randomFlags" :key="index">
-        <!-- Input escondido -->
+
+    <div class="name">
+      <h3 class="round-text">Round: {{ rodada }}</h3>
+      <div v-if="random_name.length">
+        <h1><strong>Country Name: {{ random_name[0].name.common }}</strong></h1>
+
+      </div>
+    </div>
+
+    <div class="coutries" :class="{ 'shake-animation': isError }">
+      <div v-for="(flag, index) in randomFlags" :key="index" class="flag-card">
+ 
         <input
           v-model="selectedFlag"
           type="radio"
@@ -33,7 +38,7 @@
           name="flagSelection"
           class="hidden-radio"
         />
-        <!-- Label para tornar clicável -->
+      
         <label
           :for="'flag-' + index"
           @click="selectedFlag = flag.name.common"
@@ -43,17 +48,18 @@
         </label>
       </div>
     </div>
+
     <div v-if="selectedFlag" class="btn-send">
-      <button style="background-color: green" @click="send">Send</button>
+      <button class="send-btn" @click="send">Send</button>
     </div>
+
     <div class="byn-restart">
-      <button @click="restart">Restart Game</button>
+      <button class="restart-btn" @click="restart">Restart Game</button>
     </div>
   </div>
 </template>
 
-  
-  <script setup>
+<script setup>
 import { useCountryStore } from "@/stores/country";
 import { ref, onMounted } from "vue";
 
@@ -63,17 +69,16 @@ const randomFlags = ref([]);
 const countryStore = useCountryStore();
 const random_name = ref([]);
 const counter = ref(0);
-const bestSequence = ref(parseInt(localStorage.getItem("bestSequence"))|| 0);
+const bestSequence = ref(parseInt(localStorage.getItem("bestSequence")) || 0);
 const sequence = ref(0);
 const rodada = ref(0);
 const selectedFlag = ref("");
+const isError = ref(false);
 
 function startGame() {
   allCountries.value = countryStore.allFlagsArray;
-  console.log(allCountries.value); // Verificar se as bandeiras foram carregadas corretamente
   randomFlags.value = [];
   random_name.value = [];
-  console.log(randomFlags.value.length);
   selectedFlag.value = "";
   rodada.value++;
   while (randomFlags.value.length < 4) {
@@ -83,13 +88,10 @@ function startGame() {
     }
   }
   const randomIndexName = Math.floor(Math.random() * randomFlags.value.length);
-  console.log(randomIndexName);
   random_name.value.push(randomFlags.value[randomIndexName]);
-
-  console.log(random_name.value[0].name.common);
 }
+
 function send() {
-  console.log(selectedFlag.value);
   if (selectedFlag.value === random_name.value[0].name.common) {
     counter.value++;
     sequence.value++;
@@ -98,14 +100,16 @@ function send() {
       bestSequence.value = sequence.value;
       localStorage.setItem("bestSequence", bestSequence.value);
     }
-    console.log("Acertou! Pontuação:", counter.value);
   } else {
-
     sequence.value = 0;
+    isError.value = true; 
+    setTimeout(() => {
+      isError.value = false; // Desativa a animação após 0.5s
+    }, 500);
     startGame();
-    console.log("errouuuu");
   }
 }
+
 function restart() {
   randomFlags.value = [];
   random_name.value = [];
@@ -113,52 +117,75 @@ function restart() {
   counter.value = 0;
   startGame();
 }
+
 onMounted(async () => {
   await countryStore.getFlags();
   startGame();
 });
 </script>
-  
-  <style scoped>
-.game {
-  flex-direction: column;
-  display: flex;
-  align-items: center;
-}
-.name {
-  align-items: center;
-  justify-content: center;
 
-  text-align: center;
+<style scoped>
+.game {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color:  #E0F7FA;
+  padding: 20px;
 }
+
+.game-title {
+  font-size: 20px;
+  color: #333;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
 .placar {
+  flex-direction: column;
+  justify-content: center;
+  gap: 30px;
+  margin-bottom: 20px;
+}
+.back {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%; 
+  margin-bottom: 20px; 
+}
+.score-box {
+  color: #ffff;
+  background:   #35828D;
   display: flex;
   gap: 20px;
-
-  text-align: center;
-  justify-content: center;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
+
+.score-box h3 {
+  margin: 5px 0;
+  font-size: 18px;
+  color: #333;
+}
+
 .selected-flag {
-  background-color: #4caf50; /* Verde */
+  background-color: #4caf50; 
   padding: 10px;
+ 
+  justify-content: center;
+  align-items: center;
   border-radius: 10px;
   display: inline-block;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
-
-.back {
-  align-self: flex-start; /* Garante que o botão fique no canto superior esquerdo */
-}
-
+.
 .back-button {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: white;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+
   text-decoration: none;
+  margin-left: 20px;
 }
 
 .back-button .material-icons {
@@ -168,29 +195,93 @@ onMounted(async () => {
 
 .coutries {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 2 bandeiras por linha */
+  grid-template-columns: repeat(2, 1fr); 
   gap: 20px;
   justify-items: center;
-  width: 100%;
-  max-width: 800px; /* Ajuste o tamanho máximo conforme necessário */
-  padding: 1rem;
+  max-width: 400px;
+  margin-top: 20px;
 }
+
+.flag-card {
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .hidden-radio {
   display: none;
 }
+
 .btn-send {
-  justify-content: center;
   display: flex;
+  justify-content: center;
+  margin-top: 20px;
 }
-.btn-send button {
+
+.send-btn {
+  background-color: #4caf50;
   color: white;
-  border-radius: 10px;
-  padding: 10px;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 8px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.send-btn:hover {
+  background-color: #45a049;
+}
+
+.byn-restart {
+  margin-top: 20px;
+}
+
+.restart-btn {
+  background-color: #d9534c;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.restart-btn:hover {
+  background-color: #c9302c;
 }
 
 .coutries img {
-  max-width: 100%; /* Garante que a imagem se ajuste corretamente */
+  max-width: 90%;
   height: auto;
+  border-radius: 8px;
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
 }
+.name{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.round-text {
+  font-size: 26px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+}
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  50% { transform: translateX(10px); }
+  75% { transform: translateX(-10px); }
+  100% { transform: translateX(0); }
+}
+
+.shake-animation {
+  animation: shake 0.5s ease-in-out;
+}
+
 </style>
-  
