@@ -31,7 +31,7 @@ async function getFlags() {
       currency.value = ''
       filtred.value = true
     } catch (error) {
-      alert( currency.value + " Invalidii currency");
+      alert( currency.value + " Invalid currency");
     }
   }
   async function getName() {

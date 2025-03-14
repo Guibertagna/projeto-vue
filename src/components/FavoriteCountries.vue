@@ -6,7 +6,7 @@
         <span class="material-icons">arrow_back</span>
       </router-link>
     </div>
-   <div v-if="countries.length > 0"> <strong>
+    <div v-if="countries.length > 0"> <strong>
     <h1  >Favorite Countries</h1></strong></div>
     <div v-else class="no-favorites">
       <img src="../assets/empty-folder.png" alt="Nenhum favorito" class="no-favorites-img">
@@ -16,7 +16,8 @@
 
     <div v-if="countries.length > 0" class="countries-grid">
       <div v-for="country in countries" :key="country.name?.official || country.name" class="country-card">
-        <img :src="country?.img" :alt="`Bandeira de ${country.name}`" class="country-flag">
+        
+        <img :src="country?.img" :alt="`Bandeira de ${country.name}`" class="country-flag"   @click="goToCoutryDetails(country.name)">
         <h3 class="country-name">{{ country.name }}</h3>
         <button @click="remove(country)" class="remove-btn">
           Remove
@@ -29,10 +30,13 @@
 <script setup>
 import { computed, onMounted } from "vue";
 import { useFavoriteCountryStore } from "@/stores/favorite";
-
+import { useRouter } from "vue-router";
+const router = useRouter();
 const usefavorite = useFavoriteCountryStore();
 const countries = computed(() => usefavorite.favoriteCountries);
-
+const goToCoutryDetails = (countryName) => {
+  router.push(`/country/${countryName}`);
+};
 onMounted(() => {
   usefavorite.loadFavorites();
 });

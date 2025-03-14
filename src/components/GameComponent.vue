@@ -100,7 +100,8 @@ function send() {
       bestSequence.value = sequence.value;
       localStorage.setItem("bestSequence", bestSequence.value);
     }
-  } else {
+
+  }else {
     sequence.value = 0;
     isError.value = true; 
     setTimeout(() => {
