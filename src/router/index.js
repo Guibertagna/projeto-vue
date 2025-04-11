@@ -5,9 +5,9 @@ import FavoritesView from '@/views/FavoritesView.vue'
 import GameView from '@/views/GameView.vue'
 
 const routes = [
-  { path: '/', name: 'Home', component: HomeView, meta: { title: 'Home' } },
+  { path: '/', name: 'Home', component: GameView, meta: { title: 'Game' } },
   { path: '/country/:name', name: 'Detalhes', component: DetalhesView, props: true, meta: { title: 'Detalhes' } },
-  { path: '/game', name: 'Game', component: GameView, meta: { title: 'Game' } },
+  { path: '/countries', name: 'Game', component: HomeView, meta: { title: 'Home' } },
   { path: '/fav', name: 'Favorites', component: FavoritesView, meta: { title: 'Favorites' } },
 ]
 

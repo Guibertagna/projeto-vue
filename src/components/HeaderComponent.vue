@@ -1,18 +1,24 @@
 <template>
   <header class="header">
-    <img src="../assets/falgs-removebg-preview.png" class="logo-img" alt="Logo"/>
-
+    <router-link to="/">
+      <img src="../assets/falgs-removebg-preview.png" class="logo-img" alt="Logo"/>
+    </router-link>
     <nav class="nav">
-      <router-link to="/" class="nav-link">Home</router-link>
+      <router-link to="/countries" class="nav-link">Explore the countries</router-link>
       <router-link to="/game" class="nav-link">Game</router-link>
-      <router-link to="/fav" class="nav-link">Favoritos</router-link>
+      <router-link to="/fav" class="nav-link">Favorites</router-link>
     </nav>
   </header>
 </template>
 
+<script setup>
+import { ref, onMounted } from "vue";
+
+onMounted(() => {});
+</script>
 
 <style scoped>
-
+/* Header clean e elegante */
 .header {
   display: flex;
   align-items: center;
@@ -25,33 +31,32 @@
   height: 100px; 
 }
 
-
+/* Ajustando a classe "parse" para alinhar o título ao centro */
 .parse {
   font-size: 22px;
   font-weight: 600;
   text-decoration: none;
   color: #ffff;
   transition: color 0.3s ease;
-  flex-grow: 1;  
-  text-align: center; 
-  margin: 0; 
+  flex-grow: 1;  /* Isso vai fazer o h1 ocupar o espaço disponível */
+  text-align: center; /* Alinha o texto no centro */
+  margin: 0; /* Remove margem para evitar deslocamento */
 }
 
+/* Reduzindo o tamanho da imagem do logo */
 .logo-img {
-  height: 100px; 
+  height: 100px; /* Ajuste o tamanho conforme necessário */
   width: auto;
 }
 
-
+/* Navegação */
 .nav {
   display: flex;
-  align-items: end;
   gap: 25px;
 }
 
 .nav-link {
   text-decoration: none;
-
   color: #ffff;
   font-size: 16px;
   font-weight: 500;

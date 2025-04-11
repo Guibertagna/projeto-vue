@@ -5,9 +5,6 @@
         href="https://fonts.googleapis.com/icon?family=Material+Icons"
         rel="stylesheet"
       />
-      <router-link to="/" class="back-button">
-        <span class="material-icons">arrow_back</span>
-      </router-link>
     </div>
     <h2 class="game-title">Select the flag that matches the country name</h2>
 
@@ -109,13 +106,13 @@ function send() {
     sequence.value = 0;
     isError.value = true; 
     setTimeout(() => {
-      isError.value = false; // Desativa a animação após 0.5s
+      isError.value = false; 
     }, 500);
     startGame();
   }
 }
 const percentage = computed(() => {
-  return rodada.value > 0 ? ((counter.value / rodada.value) * 100).toFixed(2) : 0;
+  return rodada.value-1 > 0 ? ((counter.value / (rodada.value - 1)) * 100).toFixed(2) : 0;
 });
 function restart() {
   randomFlags.value = [];
