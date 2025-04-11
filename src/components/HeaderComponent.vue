@@ -5,7 +5,7 @@
     </router-link>
     <nav class="nav">
       <router-link to="/countries" class="nav-link">Explore the countries</router-link>
-      <router-link to="/game" class="nav-link">Game</router-link>
+      <router-link to="/" class="nav-link">Game</router-link>
       <router-link to="/fav" class="nav-link">Favorites</router-link>
     </nav>
   </header>
@@ -18,7 +18,7 @@ onMounted(() => {});
 </script>
 
 <style scoped>
-/* Header clean e elegante */
+
 .header {
   display: flex;
   align-items: center;
@@ -31,25 +31,25 @@ onMounted(() => {});
   height: 100px; 
 }
 
-/* Ajustando a classe "parse" para alinhar o título ao centro */
+
 .parse {
   font-size: 22px;
   font-weight: 600;
   text-decoration: none;
   color: #ffff;
   transition: color 0.3s ease;
-  flex-grow: 1;  /* Isso vai fazer o h1 ocupar o espaço disponível */
-  text-align: center; /* Alinha o texto no centro */
-  margin: 0; /* Remove margem para evitar deslocamento */
+  flex-grow: 1; 
+  text-align: center;
+  margin: 0; 
 }
 
-/* Reduzindo o tamanho da imagem do logo */
+
 .logo-img {
-  height: 100px; /* Ajuste o tamanho conforme necessário */
+  height: 100px;
   width: auto;
 }
 
-/* Navegação */
+
 .nav {
   display: flex;
   gap: 25px;
